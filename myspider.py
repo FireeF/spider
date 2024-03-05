@@ -6,16 +6,16 @@ from bs4 import BeautifulSoup
 
 class MySpider(scrapy.Spider):
     name = 'myspider'
-    start_urls = ['https://oas.fon.bg.ac.rs']  # Start URL of the website you want to crawl
-    visited_urls = set()  # Set to keep track of visited URLs
+    start_urls = ['https://youtube.com']  # Start URL of the website you want to crawl
+    visited_urls = set() 
 
     def parse(self, response):
-        # Extract text content from specific HTML elements
+    
         title = response.css('title::text').get()
         url = response.url
         html = response.body.decode(response.encoding)
 
-        # Parse HTML content using BeautifulSoup
+        
         soup = BeautifulSoup(html, 'html.parser')
 
         # Extract text from elements within <main> tags
@@ -31,10 +31,10 @@ class MySpider(scrapy.Spider):
                 'text_content': text_content
             }
 
-        # Mark the current URL as visited
+        
         self.visited_urls.add(url)
 
-        # Follow links if depth is less than 2 and within the same domain
+        
         if response.meta.get('depth', 0) < 2:
             for link in response.css('a::attr(href)').getall():
                 if self.should_follow_link(link):
@@ -43,19 +43,6 @@ class MySpider(scrapy.Spider):
     def should_follow_link(self, link):
         # Exclude certain links based on patterns
         exclude_patterns = [
-            '/vesti/',
-            '/Category/',
-            '/vazno-obavestenje/',
-            '/ispiti/',
-            '/kolokvijumi/',
-            '/predavanja-seminari-radionice/',
-            '/strucna-praksa/',
-            '/medjunarodna-saradnja/',
-            '/upis/',
-            '/krediti-i-stipendije/',
-            '/konsultacije/',
-            '/zavrsni-radovi/',
-            '/raspored-ispita/',
             '/????/'
         ]
 
